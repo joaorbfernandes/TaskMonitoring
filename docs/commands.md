@@ -1,115 +1,61 @@
 # Commands — Projeto Task Core
 
-Este ficheiro documenta os comandos oficiais usados no projeto.
+Este ficheiro documenta **todos os comandos oficiais** do projeto.
 
-Não existem comandos “implícitos”.
-Tudo o que é executado deve estar aqui documentado.
+## Ambiente DEV
 
----
-
-## Ambiente de Desenvolvimento (DEV)
-
-### Subir ambiente DEV
-
-Cria o ambiente PostgreSQL de desenvolvimento do zero:
-
+### Criar ambiente DEV
 ```bash
 scripts/dev_setup.sh
 ```
-
-Este comando:
-- sobe o container PostgreSQL (DEV)
-- cria schema e tabelas
-- aplica seed de desenvolvimento
 
 ### Reset completo do DEV
 
-Remove completamente o ambiente DEV:
-
 ```bash
-docker compose -f docker/docker-compose.dev.yml down -v
+docker compose -p dev -f docker/docker-compose.dev.yml down -v --remove-orphans
 ```
 
-Depois disso, o ambiente pode ser recriado com:
+## Ambiente TEST (estável)
 
-```bash
-scripts/dev_setup.sh
-```
-
-## Executar CLI (ambiente DEV)
-A CLI existe apenas para:
-- demonstrar o fluxo do domínio
-- executar cenários pedagógicos
-- tornar visíveis decisões via logs
-
-```bash
-uv run python main.py
-```
-
-Notas importantes:
-- a CLI usa repositório em memória
-- os dados não persistem entre execuções
-- o estado é sempre recriado
-
-Testes
-
-Testes normais (default)
-
-Incluem:
-- testes de domínio
-- testes da camada de aplicação
-
-Não usam base de dados real.
-
-```bash
-uv run pytest
-```
-
-Estes testes:
-- são seguros
-- correm sempre
-- não alteram infraestrutura
-
-⸻
-
-## Testes de infraestrutura (PostgreSQL)
-
-⚠️ Nunca correm por defeito
-
-Antes de executar:
-- o ambiente TEST deve existir
-- criado via script dedicado
-
-Criar ambiente TEST:
+### Criar / atualizar ambiente TEST
 
 ```bash
 scripts/test_setup.sh
 ```
 
-Executar testes de infraestrutura:
-
-```bash
-RUN_INFRA_TESTS=1 uv run pytest -m infrastructure -v
-```
-
-Estes testes:
-- usam PostgreSQL real
-- criam e removem dados
-- assumem isolamento
-- nunca devem apontar para DEV ou PROD
+Este comando:
+	•	é idempotente
+	•	não apaga dados
+	•	pode ser executado várias vezes
 
 ⸻
 
-## Estrutura do projeto
+## Testes de Infraestrutura
 
-Visualizar a estrutura do projeto, ignorando ficheiros irrelevantes:
+### Executar infra tests
+
+```bash
+scripts/test_infra_setup.sh
+```
+
+Este é o único comando válido para infra tests.
+
+## CLI (ambiente DEV)
+
+### A CLI existe apenas para demonstrar o domínio.
+
+```bash
+uv run python -m app.interfaces.cli.main
+```
+
+## Testes unitários e de domínio
+
+```bash
+uv run pytest
+```
+
+## Estrutura do projeto
 
 ```bash
 tree -a -I ".venv|__pycache__|.pytest_cache|.git|uv.lock|__init__.py"
 ```
-
-## Regras importantes
-- Nunca executar testes de infraestrutura sem isolamento
-- Nunca apontar testes para DEV ou PROD
-- Nunca criar ambientes manualmente fora dos scripts
-- Scripts são a fonte de verdade operacional

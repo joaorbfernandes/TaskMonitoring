@@ -1,84 +1,87 @@
-## Ambiente de Desenvolvimento — PostgreSQL (DEV)
+# Ambientes do Projeto — Task Core
 
-## Objetivo
-Base de dados PostgreSQL para desenvolvimento local.
+Este projeto utiliza **ambientes isolados por responsabilidade**.
 
-Este ambiente é:
-- usado por humanos
-- recriável do zero
-- não é fonte de verdade histórica
+Cada ambiente tem:
+- um objetivo claro
+- regras próprias
+- scripts oficiais de gestão
+
+Não existem ambientes “híbridos”.
 
 ---
 
-## Stack
-- PostgreSQL 16 (Docker)
-- Database: `task_core_dev`
+## DEV — Desenvolvimento Local
+
+### Objetivo
+Ambiente para desenvolvimento diário.
+
+Características:
+- destrutivo
+- reprodutível
+- com seed
+- isolado de TEST e CI
+
+Usado por:
+- developers
+- exploração manual
+- validação rápida
+
+### Configuração
+- Docker Compose project: `dev`
+- PostgreSQL 16
 - Porta: `5433`
-- Dados persistentes em volume Docker
+- Volume persistente: `dev_task_pg_dev`
 
----
-
-## Entry point oficial
-
-O ambiente de DEV **não deve ser criado manualmente**.
-
-Usa sempre o script:
-
+### Script oficial
 ```bash
 scripts/dev_setup.sh
+```
+Este script:
+	•	sobe o PostgreSQL (DEV)
+	•	espera pelo serviço
+	•	cria schema e tabelas
+	•	aplica seed de desenvolvimento
+
+Reset completo:
+
+```bash
+docker compose -p dev -f docker/docker-compose.dev.yml down -v --remove-orphans
+```
+
+## TEST — Ambiente de Testes Estável
+
+### Objetivo
+
+Ambiente estável para testes humanos.
+
+Características:
+	•	não destrutivo
+	•	sem seed
+	•	dados persistem
+	•	idempotente
+
+Usado por:
+	•	testers
+	•	developers
+	•	validação funcional
+
+### Configuração
+	•	Docker Compose project: test
+	•	PostgreSQL 16
+	•	Porta: 5434
+	•	Volume persistente: test_task_pg_test
+
+### Script oficial
+
+```bash
+scripts/test_setup.sh
 ```
 
 Este script:
-- sobe o container PostgreSQL
-- espera até o serviço estar pronto
-- cria o schema task_core
-- cria as tabelas base
-- aplica seed de desenvolvimento
+	•	sobe o PostgreSQL (TEST)
+	•	aplica bootstrap idempotente
+	•	aplica migrations
+	•	não apaga dados
 
-```text
-DATABASE_URL=postgresql://task_user:task_pass@localhost:5433/task_core_dev
-```
-
-Usada pelo CLI e pela aplicação.
-
-## O que DEV pode ter
-
-- seed de dados
-- dados temporários
-- resets completos
-
-## DEV existe para:
-
-- desenvolver
-- explorar
-- testar manualmente
-
-⸻
-
-## O que DEV não usa
-
-- db/schema.sql
-- db/ci/bootstrap.sql
-- migrations como fonte inicial
-- search_path implícito
-
-⸻
-
-## Parar e limpar ambiente
-
-Para destruir completamente o ambiente DEV:
-
-```bash
-docker compose -f docker/docker-compose.dev.yml down -v
-```
-
-Depois disso, o ambiente pode ser recriado novamente com:
-
-```bash
-scripts/dev_setup.sh
-```
-
-## Regra importante
-
-DEV é descartável.
-A fonte de verdade da base de dados vive nas migrations.
+O script pode ser executado múltiplas vezes sem efeitos colaterais.

@@ -3,7 +3,10 @@ set -e
 
 echo "Starting DEV environment..."
 
-docker compose -f docker/docker-compose.dev.yml up -d
+docker compose \
+  -p dev \
+  -f docker/docker-compose.dev.yml \
+  up -d
 
 echo "Waiting for PostgreSQL (DEV) to be ready..."
 

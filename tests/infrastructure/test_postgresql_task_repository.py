@@ -14,7 +14,12 @@ from app.infrastructure.persistence.postgresql_task_repository import PostgreSQL
 def postgres_dsn():
     if os.getenv("RUN_INFRA_TESTS") != "1":
         pytest.skip("Infrastructure tests disabled")
-    return "postgresql://task_user:task_pass@127.0.0.1:5434/task_core_test"
+
+    dsn = os.getenv("DATABASE_URL")
+    if not dsn:
+        pytest.fail("DATABASE_URL not set for infrastructure tests")
+
+    return dsn
 
 @pytest.fixture(autouse=True)
 def clean_tasks_table(postgres_dsn: str):
