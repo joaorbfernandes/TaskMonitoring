@@ -33,7 +33,6 @@ def test_add_and_get_task_roundtrip(postgres_dsn: str):
     repository = PostgreSQLTaskRepository(dsn=postgres_dsn)
 
     task = Task.create(
-        task_id=1,
         title="Test Task",
         description="Persisted test task",
         due_date=date.today(),
@@ -45,8 +44,8 @@ def test_add_and_get_task_roundtrip(postgres_dsn: str):
     loaded_task = repository.get_by_id(1)
 
     assert loaded_task is not None
-
-    assert loaded_task.id == task.id
+    assert loaded_task.id is not None
+    
     assert loaded_task.title == task.title
     assert loaded_task.description == task.description
     assert loaded_task.due_date == task.due_date

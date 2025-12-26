@@ -1,5 +1,5 @@
 CREATE TABLE tasks (
-    id INTEGER PRIMARY KEY,
+    iid BIGSERIAL PRIMARY KEY,
 
     title TEXT NOT NULL,
     description TEXT NULL,

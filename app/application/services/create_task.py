@@ -22,16 +22,14 @@ class CreateTaskUseCase:
     def execute(
         self,
         *,
-        task_id: int,
         title: str,
         description: str,
         due_date: date,
         priority: TaskPriority,
     ) -> Task:
-        self._logger.info(f"Creating task id={task_id}")
+        self._logger.info(f"Creating task with title='{title}'")
 
         task = Task.create(
-            task_id=task_id,
             title=title,
             description=description,
             due_date=due_date,

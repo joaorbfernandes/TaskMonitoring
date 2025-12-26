@@ -2,6 +2,7 @@ import psycopg
 from typing import Optional, List
 from datetime import datetime
 
+from app.domain.entities import task
 from app.domain.entities.task import Task
 from app.domain.enums.task_status import TaskStatus
 from app.domain.enums.task_priority import TaskPriority
@@ -21,15 +22,14 @@ class PostgreSQLTaskRepository(TaskRepository):
         self._dsn = dsn
         self._logger = logger or get_logger(self.__class__.__name__)
 
-    def add(self, task: Task) -> None:
-        self._logger.info(f"Persisting task id={task.id}")
+    def add(self, task: Task) -> Task:
+        self._logger.info("Persisting task")
 
         with psycopg.connect(self._dsn) as conn:
             with conn.cursor() as cur:
                 cur.execute(
                     """
                     INSERT INTO task_core.tasks (
-                        id,
                         title,
                         description,
                         due_date,
@@ -39,10 +39,10 @@ class PostgreSQLTaskRepository(TaskRepository):
                         created_at,
                         updated_at
                     )
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                    RETURNING id
                     """,
                     (
-                        task.id,
                         task.title,
                         task.description,
                         task.due_date,
@@ -54,7 +54,19 @@ class PostgreSQLTaskRepository(TaskRepository):
                     ),
                 )
 
-        self._logger.info(f"Task persisted id={task.id}")
+                task_id = cur.fetchone()[0]
+
+        return Task.rehydrate(
+            task_id=task_id,
+            title=task.title,
+            description=task.description,
+            due_date=task.due_date,
+            status=task.status,
+            priority=task.priority,
+            active=task.active,
+            created_at=task.created_at,
+            updated_at=task.updated_at,
+        )
 
     def get_by_id(self, task_id: int) -> Optional[Task]:
         self._logger.debug(f"Fetching task id={task_id}")
@@ -125,7 +137,7 @@ class PostgreSQLTaskRepository(TaskRepository):
                         active,
                         created_at,
                         updated_at
-                    FROM tasks
+                    FROM task_core.tasks
                     """
                 )
 

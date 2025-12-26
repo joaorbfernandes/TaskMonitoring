@@ -34,9 +34,11 @@ Usado por:
 - Volume persistente: `dev_task_pg_dev`
 
 ### Script oficial
+
 ```bash
 scripts/dev_setup.sh
 ```
+
 Este script:
 - sobe o PostgreSQL (DEV)
 - espera pelo serviço
@@ -85,3 +87,9 @@ Este script:
 - não apaga dados
 
 O script pode ser executado múltiplas vezes sem efeitos colaterais.
+
+Reset completo:
+
+```bash
+docker compose -p test -f docker/docker-compose.test.yml down -v --remove-orphans
+```

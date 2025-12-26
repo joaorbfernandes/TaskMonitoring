@@ -12,7 +12,7 @@ class Task:
 
     def __init__(
         self,
-        task_id: int,
+        task_id: int | None,
         title: str,
         description: str | None,
         due_date: date,
@@ -51,7 +51,6 @@ class Task:
     @classmethod
     def create(
         cls,
-        task_id: int,
         title: str,
         description: str | None,
         due_date: date,
@@ -61,7 +60,7 @@ class Task:
             raise ValueError("Due date cannot be in the past")
 
         return cls(
-            task_id=task_id,
+            task_id=None,
             title=title,
             description=description,
             due_date=due_date,

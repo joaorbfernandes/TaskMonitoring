@@ -3,7 +3,7 @@
 CREATE SCHEMA IF NOT EXISTS task_core;
 
 CREATE TABLE IF NOT EXISTS task_core.tasks (
-    id BIGINT PRIMARY KEY,
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     title TEXT NOT NULL,
     description TEXT,
     due_date DATE NOT NULL,
