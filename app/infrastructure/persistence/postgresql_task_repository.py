@@ -28,7 +28,7 @@ class PostgreSQLTaskRepository(TaskRepository):
             with conn.cursor() as cur:
                 cur.execute(
                     """
-                    INSERT INTO tasks (
+                    INSERT INTO task_core.tasks (
                         id,
                         title,
                         description,
@@ -73,7 +73,7 @@ class PostgreSQLTaskRepository(TaskRepository):
                         active,
                         created_at,
                         updated_at
-                    FROM tasks
+                    FROM task_core.tasks
                     WHERE id = %s
                     """,
                     (task_id,),

@@ -1,93 +1,107 @@
-# Ambiente de Desenvolvimento — PostgreSQL
+# Ambiente de Desenvolvimento — PostgreSQL (DEV)
 
-	•	Ter um ambiente DEV estável
-	•	Separado de TEST e PROD
-	•	Reprodutível a qualquer momento
+## Objetivo
 
+Disponibilizar um ambiente PostgreSQL estável para desenvolvimento local.
 
-# Stack usada
+Este ambiente é:
+- isolado de TEST e PROD
+- reprodutível a qualquer momento
+- descartável
 
-	•	PostgreSQL 16 (Docker)
-	•	psycopg v3
-	•	Python (CLI apenas para demonstração do core)
+DEV existe para trabalho humano; não é fonte de verdade histórica.
 
+## Stack usada
 
-# Container de base de dados (DEV)
+- PostgreSQL 16 (Docker)
+- psycopg v3
+- Python (CLI apenas para validação do core)
 
-Nome
-	•	Container: task-db-dev
-	•	Database: task_core_dev
-	•	User: task_user
-	•	Password: task_pass
+## Configuração do ambiente DEV
 
-Porta
-	•	Host: 5433
-	•	Container: 5432
+- Container: `task-db-dev`
+- Database: `task_core_dev`
+- User: `task_user`
+- Porta (host): `5433`
+- Porta (container): `5432`
+- Dados persistidos em volume Docker
 
-```bash
-docker run --name task-db-dev \
-  -e POSTGRES_USER=task_user \
-  -e POSTGRES_PASSWORD=task_pass \
-  -e POSTGRES_DB=task_core_dev \
-  -p 5433:5432 \
-  -d postgres:16
-```
+## Entry point oficial
 
-# Aplicar schema SQL
+O ambiente DEV **não deve ser criado manualmente**.
+
+Usa sempre o script:
 
 ```bash
-docker exec -i task-db-dev \
-  psql -U task_user -d task_core_dev < db/schema.sql
-```
-## Verification
-
-```bash
-docker exec -it task-db-dev \
-  psql -U task_user -d task_core_dev
+scripts/dev_setup.sh
 ```
 
-```sql
-\dt
-```
+Este script:
+- sobe o container PostgreSQL via Docker Compose
+- espera até o serviço estar pronto
+- cria o schema `task_core`
+- cria as tabelas base
+- aplica seed de desenvolvimento
 
-# DEV
-
+## String de ligação
 ```text
 postgresql://task_user:task_pass@localhost:5433/task_core_dev
 ```
 
-Esta string é usada por:
-	•	CLI
-	•	Repositório PostgreSQL
-	•	Testes de infraestrutura (mais tarde)
+Usada por:
+- CLI
+- Repositório PostgreSQL
+- Aplicação
 
-# Limpar ambiente DEV
+## O que DEV pode ter
+- seed de dados
+- dados temporários
+- resets completos
 
-## Apagar dados (Manter Container)
-```sql
-TRUNCATE TABLE tasks;
-```
+DEV serve para:
+- desenvolver
+- explorar
+- testar manualmente
 
-## Reset total
+## O que DEV não usa
+- db/schema.sql como mecanismo de execução
+- db/ci/bootstrap.sql
+- migrations como fonte inicial de DEV
+- search_path implícito
+
+## Reset do ambiente DEV
+
+Para destruir completamente o ambiente:
+
 ```bash
-docker stop task-db-dev
-docker rm task-db-dev
+docker compose -f docker/docker-compose.dev.yml down -v
 ```
 
-Depois subir novamente e reaplicar schema.
+Depois disso, o ambiente pode ser recriado com:
 
-# Notas importantes
+```bash
+scripts/dev_setup.sh
+```
 
-Nunca usar porta 5432 em DEV
-	•	Evita conflitos com PostgreSQL local
-CLI não é produto
-	•	Serve apenas para validar domínio + infra
-Schema é manual
-	•	Migrações só entram quando houver API real
+## Regras importantes
+- Nunca usar a porta 5432 no host
+- DEV é descartável
+- A fonte de verdade da base de dados vive nas migrations
+- Infra não depende de contexto implícito
 
-# Estado atual do projeto
 
-✔️ Domínio modelado
-✔️ Infraestrutura PostgreSQL funcional
-✔️ Separação clara DEV / futuro TEST
-⏭️ Próximo passo: testes de infraestrutura
+## Estado atual do projeto
+
+- Domínio modelado
+- Infra PostgreSQL funcional
+- Separação clara DEV / TEST / CI
+- Scripts reprodutíveis
+- Testes de infraestrutura a passar
+
+## O que isto resolve
+
+- Elimina caminhos antigos
+- Não contradiz CI
+- Reflete exatamente o que testaste
+- É compreensível daqui a 6 meses
+- Não cria decisões implícitas

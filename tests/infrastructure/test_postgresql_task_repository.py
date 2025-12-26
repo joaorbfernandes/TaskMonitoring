@@ -14,13 +14,13 @@ from app.infrastructure.persistence.postgresql_task_repository import PostgreSQL
 def postgres_dsn():
     if os.getenv("RUN_INFRA_TESTS") != "1":
         pytest.skip("Infrastructure tests disabled")
-    return "postgresql://task_user:task_pass@127.0.0.1:5433/task_core_dev"
+    return "postgresql://task_user:task_pass@127.0.0.1:5434/task_core_test"
 
 @pytest.fixture(autouse=True)
 def clean_tasks_table(postgres_dsn: str):
     with psycopg.connect(postgres_dsn) as conn:
         with conn.cursor() as cur:
-            cur.execute("DELETE FROM tasks")
+            cur.execute("DELETE FROM task_core.tasks")
     yield
 
 @pytest.mark.infrastructure

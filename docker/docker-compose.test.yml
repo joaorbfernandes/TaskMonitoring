@@ -1,0 +1,17 @@
+services:
+  postgres-test:
+    image: postgres:16
+    container_name: task-db-test
+    environment:
+      POSTGRES_USER: task_user
+      POSTGRES_PASSWORD: task_pass
+      POSTGRES_DB: task_core_test
+    ports:
+      - "5434:5432"
+    volumes:
+      - ../db/init/test.sql:/docker-entrypoint-initdb.d/init.sql
+      - ../db/schema.sql:/schema.sql
+    restart: unless-stopped
+
+volumes:
+  task_pg_dev:

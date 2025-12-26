@@ -192,6 +192,20 @@ Por isso:
 - Tasks não persistem entre comandos
 - Este comportamento é esperado no estado atual
 
+### PostgreSQLTaskRepository
+
+Implementação de repositório baseada em PostgreSQL.
+
+Responsabilidades:
+- traduzir entidades de domínio para SQL
+- garantir persistência consistente
+- não expor detalhes da base de dados ao domínio
+
+Esta implementação:
+- é totalmente substituível
+- não altera o domínio
+- é validada por testes de infraestrutura
+
 ## Interface CLI (estado atual)
 
 O CLI existe para:
@@ -207,6 +221,28 @@ Fluxo típico:
 3. Avalia flags
 4. Apresenta resultados
 
+## Fronteiras da arquitetura
+
+O domínio:
+- não conhece base de dados
+- não conhece frameworks
+- não conhece interfaces externas
+
+A aplicação:
+- coordena fluxos
+- chama o domínio
+- depende de abstrações
+
+A infraestrutura:
+- implementa detalhes técnicos
+- pode ser substituída
+- nunca contém lógica de negócio
+
+As interfaces (CLI, futura API):
+- apenas chamam casos de uso
+- não executam regras
+- não acedem diretamente à base de dados
+
 ## Estado atual do projeto
 
 O projeto encontra-se num estado sólido:
@@ -221,11 +257,19 @@ Nada no domínio terá de ser alterado para:
 - Expor API com FastAPI
 - Adicionar novos interfaces
 
-## Próximos passos
+## Estado atual e próximos passos
 
-- Persistência com PostgreSQL via repositório
-- API HTTP (FastAPI)
-- Documentação técnica detalhada do fluxo completo
+O domínio encontra-se estável e isolado.
+
+Atualmente o projeto já inclui:
+- persistência real via PostgreSQL (repositório)
+- testes de infraestrutura com base de dados real
+- scripts de bootstrap para DEV e TEST
+
+Próximos passos:
+- exposição via API HTTP (FastAPI)
+- consolidação do mapper Python ↔ SQL
+- documentação do fluxo completo request → domínio → persistência
 
 ## Objetivo do projeto
 
