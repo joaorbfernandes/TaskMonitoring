@@ -1,19 +1,25 @@
 # Documentação — Testes de Infraestrutura (PostgreSQL)
 
 Objetivo
-	•	Testar a infraestrutura real
-	•	Validar integração com PostgreSQL
-	•	Garantir que persistência funciona como esperado
-	•	Nunca correr estes testes por acidente
+- Testar a infraestrutura real
+- Validar integração com PostgreSQL
+- Garantir que persistência funciona como esperado
+- Evitar execução acidental
+
+## Ambiente usado
+- PostgreSQL em Docker
+- DB: task_core_dev
+- Porta: 5433
+- Nunca apontar para prod
 
 ## Separação de testes
 
 Testes normais (default)
-	•	Domain
-	•	Application
-	•	Não usam DB real
-	•	Seguros
-	•	Correm sempre
+- Domain
+- Application
+- Não usam DB real
+- Seguros
+- Correm sempre
 
 ```bash
 uv run pytest
@@ -21,10 +27,10 @@ uv run pytest
 
 ## Testes de infraestrutura
 
-	•	Usam PostgreSQL real (Docker)
-	•	Criam e leem dados reais
-	•	Podem apagar dados
-	•	Nunca correm por defeito
+- Usam PostgreSQL real (Docker)
+- Criam e leem dados reais
+- Podem apagar dados
+- Nunca correm por defeito
 
 Estão marcados com:
 
@@ -47,3 +53,6 @@ Sem isto, os testes são automaticamente ignorados.
 ```bash
 RUN_INFRA_TESTS=1 uv run pytest -m infrastructure -v
 ```
+
+## Regra de ouro:
+- Testes de infraestrutura nunca devem correr em CI sem isolamento
