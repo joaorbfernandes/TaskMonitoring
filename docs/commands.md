@@ -24,9 +24,9 @@ scripts/test_setup.sh
 ```
 
 Este comando:
-	•	é idempotente
-	•	não apaga dados
-	•	pode ser executado várias vezes
+- é idempotente
+- não apaga dados
+- pode ser executado várias vezes
 
 ⸻
 

@@ -38,10 +38,10 @@ Usado por:
 scripts/dev_setup.sh
 ```
 Este script:
-	•	sobe o PostgreSQL (DEV)
-	•	espera pelo serviço
-	•	cria schema e tabelas
-	•	aplica seed de desenvolvimento
+- sobe o PostgreSQL (DEV)
+- espera pelo serviço
+- cria schema e tabelas
+- aplica seed de desenvolvimento
 
 Reset completo:
 
@@ -56,21 +56,21 @@ docker compose -p dev -f docker/docker-compose.dev.yml down -v --remove-orphans
 Ambiente estável para testes humanos.
 
 Características:
-	•	não destrutivo
-	•	sem seed
-	•	dados persistem
-	•	idempotente
+- não destrutivo
+- sem seed
+- dados persistem
+- idempotente
 
 Usado por:
-	•	testers
-	•	developers
-	•	validação funcional
+- testers
+- developers
+- validação funcional
 
 ### Configuração
-	•	Docker Compose project: test
-	•	PostgreSQL 16
-	•	Porta: 5434
-	•	Volume persistente: test_task_pg_test
+- Docker Compose project: test
+- PostgreSQL 16
+- Porta: 5434
+- Volume persistente: test_task_pg_test
 
 ### Script oficial
 
@@ -79,9 +79,9 @@ scripts/test_setup.sh
 ```
 
 Este script:
-	•	sobe o PostgreSQL (TEST)
-	•	aplica bootstrap idempotente
-	•	aplica migrations
-	•	não apaga dados
+- sobe o PostgreSQL (TEST)
+- aplica bootstrap idempotente
+- aplica migrations
+- não apaga dados
 
 O script pode ser executado múltiplas vezes sem efeitos colaterais.
