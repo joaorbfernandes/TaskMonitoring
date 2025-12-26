@@ -36,7 +36,8 @@ class EvaluateTaskFlagUseCase:
 
         self._logger.info(
             f"Finished task flag evaluation for task_id={task_id} | "
-            f"primary_flag={evaluation.primary_flag}"
+            f"primary_flag={evaluation.primary_flag} | "
+            f"all_flags={evaluation.flags}"
         )
 
         return evaluation
