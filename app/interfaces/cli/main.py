@@ -7,18 +7,22 @@ from app.domain.services.rules.overdue_rule import OverdueRule
 from app.domain.services.rules.near_due_date_rule import NearDueDateRule
 from app.domain.services.rules.blocked_rule import BlockedRule
 from app.domain.services.task_flag_evaluator import TaskFlagEvaluator
-from app.infrastructure.persistence.in_memory_task_repository import InMemoryTaskRepository
+from app.infrastructure.persistence.postgresql_task_repository import PostgreSQLTaskRepository
+# from app.infrastructure.persistence.in_memory_task_repository import InMemoryTaskRepository
 from app.application.services.evaluate_task_flag import EvaluateTaskFlagUseCase
 from app.infrastructure.logging.logger import get_logger
 
-    
+
 def main() -> None:
     logger = get_logger("CLI")
 
     # -------------------------
     # Setup infrastructure
     # -------------------------
-    repository = InMemoryTaskRepository()
+    # repository = InMemoryTaskRepository()
+
+    POSTGRES_DSN = "postgresql://task_user:task_pass@127.0.0.1:5433/task_core"
+    repository = PostgreSQLTaskRepository(dsn=POSTGRES_DSN)
 
     # -------------------------
     # Setup rules
@@ -107,7 +111,7 @@ def main() -> None:
     # Create task
     # -------------------------
     task = Task.rehydrate(
-        task_id=1,
+        task_id=3,
         title="Submit report",
         description="Quarterly financial report",
         due_date=date.today() + timedelta(days=2),
@@ -128,7 +132,7 @@ def main() -> None:
     # -------------------------
     # Evaluate
     # -------------------------
-    evaluation = use_case.execute(task_id=1)
+    evaluation = use_case.execute(task_id=3)
 
     logger.info("=== Evaluation result ===")
     logger.info(f"All flags: {evaluation.flags}")

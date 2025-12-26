@@ -10,6 +10,14 @@ class TaskRepository(Protocol):
     without knowing implementation details.
     """
 
+    def add(self, task: Task) -> None:
+        """
+        Persist a new task.
+
+        The repository decides how persistence is handled.
+        """
+        ...
+
     def get_by_id(self, task_id: int) -> Optional[Task]:
         """
         Retrieve a task by its identifier.

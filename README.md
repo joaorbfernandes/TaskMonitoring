@@ -68,9 +68,9 @@ uv run python -m app.interfaces.cli.main
 ```
 
 O CLI:
-	•	Cria tarefas em memória
-	•	Avalia flags com base em regras
-	•	Mostra o resultado com logs explicativos
+- Cria tarefas em memória
+- Avalia flags com base em regras
+- Mostra o resultado com logs explicativos
 
 ## Executar testes
 
@@ -79,19 +79,18 @@ uv run pytest
 ```
 
 Os testes focam-se em:
-	•	Comportamento do domínio
-	•	Avaliação correta das flags
-	•	Prioridade entre múltiplas regras
+- Comportamento do domínio
+- Avaliação correta das flags
+- Prioridade entre múltiplas regras
 
 ## Objetivo do projeto
 
 Este projeto existe para aprender e explicar backend sério.
-	•	Nada acontece por magia
-	•	Tudo é explícito
-	•	Tudo é testável
-	•	A arquitetura é pensada para evoluir
+- Tudo é explícito
+- Tudo é testável
+- A arquitetura é pensada para escalabilidade
 
 ## Próximos passos
-	•	Persistência com PostgreSQL
-	•	API HTTP (FastAPI)
-	•	Documentação técnica do domínio e fluxos
+- Persistência com PostgreSQL
+- API HTTP (FastAPI)
+- Documentação técnica do domínio e fluxos
