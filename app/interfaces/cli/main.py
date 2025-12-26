@@ -21,8 +21,8 @@ def main() -> None:
     # -------------------------
     # repository = InMemoryTaskRepository()
 
-    POSTGRES_DSN = "postgresql://task_user:task_pass@127.0.0.1:5433/task_core"
-    repository = PostgreSQLTaskRepository(dsn=POSTGRES_DSN)
+    DATABASE_URL = "postgresql://task_user:task_pass@127.0.0.1:5433/task_core_dev"
+    repository = PostgreSQLTaskRepository(DATABASE_URL)
 
     # -------------------------
     # Setup rules

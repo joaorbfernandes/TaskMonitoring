@@ -13,6 +13,10 @@ class TaskPriority(str, Enum):
     - Priority is NOT recalculated by the system.
     """
 
+    # No specific priority assigned
+
+    UNSPECIFIED = "UNSPECIFIED"
+
     # Low urgency, minimal impact if delayed
     LOW = "LOW"
 

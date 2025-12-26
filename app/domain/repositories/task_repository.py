@@ -29,7 +29,5 @@ class TaskRepository(Protocol):
     def list_all(self) -> List[Task]:
         """
         Retrieve all tasks.
-
-        Used for monitoring, dashboards, etc.
         """
         ...

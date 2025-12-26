@@ -14,7 +14,7 @@ class Task:
         self,
         task_id: int,
         title: str,
-        description: str,
+        description: str | None,
         due_date: date,
         status: TaskStatus,
         priority: TaskPriority,
@@ -53,7 +53,7 @@ class Task:
         cls,
         task_id: int,
         title: str,
-        description: str,
+        description: str | None,
         due_date: date,
         priority: TaskPriority,
     ) -> "Task":
