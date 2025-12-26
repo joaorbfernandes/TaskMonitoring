@@ -22,7 +22,7 @@ class PostgreSQLTaskRepository(TaskRepository):
         self._dsn = dsn
         self._logger = logger or get_logger(self.__class__.__name__)
 
-    def add(self, task: Task) -> Task:
+    def add(self, task: Task) -> None:
         self._logger.info("Persisting task")
 
         with psycopg.connect(self._dsn) as conn:
@@ -54,10 +54,15 @@ class PostgreSQLTaskRepository(TaskRepository):
                     ),
                 )
 
-                task_id = cur.fetchone()[0]
+                generated_id = cur.fetchone()[0]
+
+            # 🔑 sincronizar domínio com DB
+            task._id = generated_id
+
+            self._logger.info(f"Task persisted id={task.id}")
 
         return Task.rehydrate(
-            task_id=task_id,
+            task_id=generated_id,
             title=task.title,
             description=task.description,
             due_date=task.due_date,
@@ -157,3 +162,29 @@ class PostgreSQLTaskRepository(TaskRepository):
                     )
                     for row in rows
                 ]
+            
+    def update(self, task: Task) -> None:
+        self._logger.info(f"Updating task id={task.id}")
+
+        with psycopg.connect(self._dsn) as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    UPDATE task_core.tasks
+                    SET
+                        status = %s,
+                        priority = %s,
+                        active = %s,
+                        updated_at = %s
+                    WHERE id = %s
+                    """,
+                    (
+                        task.status.value,
+                        task.priority.value,
+                        task.active,
+                        task.updated_at,
+                        task.id,
+                    ),
+                )
+
+        self._logger.info(f"Task updated id={task.id}")

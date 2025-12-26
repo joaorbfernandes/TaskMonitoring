@@ -1,17 +1,8 @@
-import argparse
-from app.interfaces.cli.commands.create_task import (
-    register_create_task_command,
-)
+from app.interfaces.cli.app import run
 
 
 def main():
-    parser = argparse.ArgumentParser()
-    subparsers = parser.add_subparsers(dest="command", required=True)
-
-    register_create_task_command(subparsers)
-
-    args = parser.parse_args()
-    args.func(args)
+    run()
 
 
 if __name__ == "__main__":

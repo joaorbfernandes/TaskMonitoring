@@ -1,33 +1,22 @@
-from typing import Protocol, List, Optional
+from abc import ABC, abstractmethod
+from typing import Optional, List
 from app.domain.entities.task import Task
 
 
-class TaskRepository(Protocol):
-    """
-    Domain repository interface for Task aggregate.
+class TaskRepository(ABC):
 
-    Defines how Tasks are retrieved and persisted,
-    without knowing implementation details.
-    """
-
+    @abstractmethod
     def add(self, task: Task) -> None:
-        """
-        Persist a new task.
+        pass
 
-        The repository decides how persistence is handled.
-        """
-        ...
+    @abstractmethod
+    def update(self, task: Task) -> None:
+        pass
 
+    @abstractmethod
     def get_by_id(self, task_id: int) -> Optional[Task]:
-        """
-        Retrieve a task by its identifier.
+        pass
 
-        Returns None if the task does not exist.
-        """
-        ...
-
+    @abstractmethod
     def list_all(self) -> List[Task]:
-        """
-        Retrieve all tasks.
-        """
-        ...
+        pass
