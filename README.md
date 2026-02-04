@@ -33,11 +33,13 @@ As regras:
 
 ## Arquitetura
 
+```text
 app/
 ├── domain/            # Regras de negócio e entidades
 ├── application/       # Casos de uso (orquestração)
 ├── infrastructure/    # Implementações técnicas
 └── interfaces/        # Pontos de entrada (CLI / API)
+```
 
 Princípios seguidos:
 - O domínio não depende de nenhuma outra camada
@@ -52,7 +54,7 @@ Implementado:
 - Entidade `Task` como Aggregate Root
 - Sistema de flags baseado em regras de domínio
 - Avaliação de múltiplas regras em simultâneo
-- Repositório em memória
+- Persistência com PostgreSQL
 - Interface CLI pedagógica
 - Testes unitários focados no domínio e casos de uso
 
@@ -91,6 +93,5 @@ Este projeto existe para aprender e explicar backend sério.
 - A arquitetura é pensada para escalabilidade
 
 ## Próximos passos
-- Persistência com PostgreSQL
 - API HTTP (FastAPI)
 - Documentação técnica do domínio e fluxos
